@@ -153,7 +153,6 @@
     background-color: #ddd;
   }
   
-  /* Logout Button */
   .logout-btn {
     background: #FF6347;
     border: none;
@@ -168,4 +167,26 @@
   .logout-btn:hover {
     background: #FF4500;
   }
+  .leaderboard-container {
+    width: 250px;  
+    margin-left: 20px; 
+  }
   
+  .leaderboard h3 {
+    text-align: center;
+    font-size: 1.5rem;
+  }
+  
+  .leaderboard ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .leaderboard li {
+    margin: 5px 0;
+  }
+  
+  .start-button {
+    padding: 10px;
+    font-size: 1.2rem;
+  }

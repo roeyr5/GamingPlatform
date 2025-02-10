@@ -1,4 +1,3 @@
-// routes/auth.js
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -17,7 +16,7 @@ router.post('/signup', async (req, res) => {
     
     user = new User({ username, email, password: hashedPassword });
     await user.save();
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
     
     res.status(201).json({ token });
   } catch (error) {

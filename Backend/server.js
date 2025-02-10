@@ -2,8 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const gameRoutes = require('./routes/gamesRoute'); 
-const authRoutes = require('./routes/auth')
+const gameRoute = require('./routes/gamesRoute'); 
+const authRoute = require('./routes/auth')
+const leaderboardRoute = require('./routes/leaderboardRoute');
 
 dotenv.config();  
 
@@ -18,8 +19,11 @@ mongoose.connect(process.env.MONGO_URI, {
   .catch((err) => console.log(err));
 
   
-app.use('/api/games', gameRoutes);  
-app.use('/api/auth', authRoutes);
+  
+app.use('/api/games', gameRoute);  
+app.use('/api/auth', authRoute);
+app.use('/api/leaderboard', leaderboardRoute); 
+
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

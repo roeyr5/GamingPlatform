@@ -1,12 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const ticTacToeRoutes = require('./ticTacToeRoutes');
-const connectFourRoutes = require('./connectFourRoutes');
-const chessRoutes = require('./chessRoutes');
+const ticTacToeRoutes = require('./ticTacToeRoute');
 
 router.use('/tic-tac-toe', ticTacToeRoutes);
-router.use('/connect-four', connectFourRoutes);
-router.use('/chess', chessRoutes);
 
 module.exports = router;
