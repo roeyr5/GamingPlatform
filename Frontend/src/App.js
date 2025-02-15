@@ -7,19 +7,22 @@ import SignIn from './components/SignIn';
 import Main from './components/Main';
 import SnakeGame from './components/games/SnakeGame'; 
 import Leaderboard from './components/sides/Leaderboard';  
+import TicTacToe from './components/games/TicTacToe';
 
 
 function App() {
   return (
     <Router>
       <div className="app-container">
-        <Sidebar /> {/* Sidebar is always visible */}
+        <Sidebar /> 
         <div className="content">
           <Routes>
             <Route path="/signup" element={<SignUp />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/main" element={<Main />} />
             <Route path="/snake" element={<SnakeGame />} /> 
+            <Route path="/tic-tac-toe" element={<TicTacToe />} /> 
+
           </Routes>
         </div>
       </div>

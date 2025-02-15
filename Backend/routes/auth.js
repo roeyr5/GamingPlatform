@@ -16,7 +16,7 @@ router.post('/signup', async (req, res) => {
     
     user = new User({ username, email, password: hashedPassword });
     await user.save();
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '0.5h' });
     
     res.status(201).json({ token });
   } catch (error) {
@@ -39,6 +39,22 @@ router.post('/signin', async (req, res) => {
     res.json({ token });
   } catch (error) {
     res.status(500).json({ msg: 'Server Error' });
+  }
+});
+
+router.get('/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    res.json({ username: user.username }); 
+  } catch (error) {
+    console.error('Error fetching user by userId:', error);
+    res.status(500).json({ msg: 'Error fetching user data', error: error.message });
   }
 });
 

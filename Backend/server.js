@@ -5,6 +5,8 @@ const dotenv = require('dotenv');
 const gameRoute = require('./routes/gamesRoute'); 
 const authRoute = require('./routes/auth')
 const leaderboardRoute = require('./routes/leaderboardRoute');
+const ticTacToeRoute = require('./routes/ticTacToeRoute');
+
 
 dotenv.config();  
 
@@ -20,9 +22,10 @@ mongoose.connect(process.env.MONGO_URI, {
 
   
   
-app.use('/api/games', gameRoute);  
 app.use('/api/auth', authRoute);
 app.use('/api/leaderboard', leaderboardRoute); 
+app.use('/api/tic-tac-toe', ticTacToeRoute);
+
 
 
 const PORT = process.env.PORT;

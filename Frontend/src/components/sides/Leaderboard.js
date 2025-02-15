@@ -19,7 +19,7 @@ const Leaderboard = () => {
     };
 
     fetchLeaderboard();
-  }, []);  // Empty dependency array ensures this runs once when the component mounts
+  }, []);  
 
   return (
     <div className="leaderboard">

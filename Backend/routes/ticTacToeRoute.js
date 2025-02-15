@@ -1,8 +1,8 @@
 const express = require('express');
-const { startGame, makeMove } = require('../controllers/ticTacToeController');
 const router = express.Router();
+const ticTacToeController = require('../controllers/ticTacToeController');
 
-router.post('/start', startGame);
-router.post('/move/:gameId', makeMove);
+router.post('/start', ticTacToeController.startGame);
+router.post('/end', ticTacToeController.endGame);
 
 module.exports = router;

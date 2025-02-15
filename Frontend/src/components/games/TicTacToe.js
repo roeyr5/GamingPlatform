@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext'; 
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import '../../styles/games.css';
 
 const TicTacToe = () => {
@@ -19,7 +20,8 @@ const TicTacToe = () => {
 
       setGame({ board: Array(9).fill(null), currentTurn: 'X', opponent: response.data.opponent });
       setPlayer('X'); 
-      setTurnPlayer(user.username);
+      setTurnPlayer(user.username);  // Set the current player's name
+      setIsGameOver(false);  // Reset game over state
     } catch (error) {
       console.error('Error starting the game', error);
     }
@@ -27,7 +29,6 @@ const TicTacToe = () => {
 
   const makeMove = async (index) => {
     if (game.board[index] !== null || isGameOver) {
-      alert('This spot is already taken or the game is over!');
       return;
     }
 
@@ -40,13 +41,38 @@ const TicTacToe = () => {
     if (gameWon) {
       setWinner(player);
       setIsGameOver(true);
-      alert(`${player === 'X' ? 'You' : game.opponent} win!`);
-      await updatePoints(player); 
+      Swal.fire({
+        title: `${player === 'X' ? 'You' : game.opponent} win!`,
+        text: 'Would you like to start a new game?',
+        icon: 'success',
+        confirmButtonText: 'Start New Game',
+        allowOutsideClick: true, // Allow clicking outside to close
+        allowEscapeKey: true, // Allow pressing Escape to close
+      }).then((result) => {
+        if (result.isConfirmed) {
+          resetGame();
+        }
+      });
+      await updatePoints(player);
+    } else if (newBoard.every(cell => cell !== null)) {
+      setIsGameOver(true);
+      Swal.fire({
+        title: "It's a tie!",
+        text: 'Would you like to start a new game?',
+        icon: 'info',
+        confirmButtonText: 'Start New Game',
+        allowOutsideClick: true, // Allow clicking outside to close
+        allowEscapeKey: true, // Allow pressing Escape to close
+      }).then((result) => {
+        if (result.isConfirmed) {
+          resetGame();
+        }
+      });
     }
 
     setGame((prevState) => ({ ...prevState, board: newBoard, currentTurn: nextPlayer }));
     setPlayer(nextPlayer);
-    setTurnPlayer(nextPlayer === 'X' ? game.opponent : user.username); 
+    setTurnPlayer(nextPlayer === 'X' ? game.opponent : user.username);
   };
 
   const checkWinner = (board) => {
@@ -88,7 +114,10 @@ const TicTacToe = () => {
           key={index}
           className="cell"
           onClick={() => makeMove(index)}
-          style={{ cursor: isGameOver ? 'not-allowed' : 'pointer' }}
+          style={{
+            cursor: isGameOver ? 'not-allowed' : 'pointer',
+            backgroundColor: cell ? 'lightgrey' : 'white',
+          }}
         >
           {cell}
         </div>
@@ -113,17 +142,19 @@ const TicTacToe = () => {
   return (
     <div className="game-container">
       {!game ? (
-        <button onClick={startGame}>Start Game</button> 
+        <button onClick={startGame}>Start Game</button>
       ) : (
         <div>
           <div className="game-info">
             <h2>Tic Tac Toe</h2>
-            <p>Current Turn: {turnPlayer}</p> 
+            <p>Current Turn: {turnPlayer}</p>
             <p>Opponent: {game.opponent}</p>
             {winner && <p>{winner} wins!</p>}
           </div>
           {renderBoard()}
-          {isGameOver && <button onClick={resetGame}>Start new game</button>}
+          {isGameOver && (
+            <button onClick={resetGame}>Start new game</button>
+          )}
         </div>
       )}
     </div>

@@ -190,3 +190,38 @@
     padding: 10px;
     font-size: 1.2rem;
   }
+  .game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .game-info {
+    margin-bottom: 20px;
+  }
+  
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 10px;
+  }
+  
+  .cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f1f1f1;
+    font-size: 36px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    height: 100px;
+    width: 100px;
+  }
+  
+  .cell:hover {
+    background-color: #ddd;
+  }
+  
