@@ -8,6 +8,13 @@
   text-align: center;
   padding: 20px;
 }
+.body{
+  overflow: hidden;
+}
+.sidebar {
+  overflow: hidden;
+}
+
 
 canvas {
   border: 2px solid #333; 
@@ -73,4 +80,39 @@ canvas {
 .leaderboard li {
   margin: 8px 0;
   font-size: 16px;
+}.color-btn {
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  display: inline-block;
+}
+
+.color-btn.red {
+  background-color: red;
+}
+
+.color-btn.green {
+  background-color: green;
+}
+
+.color-btn.blue {
+  background-color: blue;
+}
+
+.color-btn.yellow {
+  background-color: yellow;
+}
+
+.color-btn.flash {
+  opacity: 1;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

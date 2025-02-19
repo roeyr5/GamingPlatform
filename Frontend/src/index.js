@@ -6,8 +6,8 @@ import App from './App';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-  <AuthProvider> {}
-    <React.StrictMode>
+  <AuthProvider>
+    <React.StrictMode className="test">
       <App />
     </React.StrictMode>
   </AuthProvider>

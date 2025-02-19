@@ -23,8 +23,8 @@ const Main = () => {
 
         {}
         <div className="game-section luck-game">
-          <h3>Luck Games</h3>
-          <Link to="/rock-paper-scissors" className="game-card">Rock Paper Scissors</Link>
+          <h3>Memory Games</h3>
+          <Link to="/simon" className="game-card">Simon Game</Link>
         </div>
       </div>
     </div>

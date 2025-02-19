@@ -8,11 +8,11 @@ import Main from './components/Main';
 import SnakeGame from './components/games/SnakeGame'; 
 import Leaderboard from './components/sides/Leaderboard';  
 import TicTacToe from './components/games/TicTacToe';
-
+import Simon from './components/games/SimonGame';
 
 function App() {
   return (
-    <Router>
+    <Router class ="test">
       <div className="app-container">
         <Sidebar /> 
         <div className="content">
@@ -22,6 +22,7 @@ function App() {
             <Route path="/main" element={<Main />} />
             <Route path="/snake" element={<SnakeGame />} /> 
             <Route path="/tic-tac-toe" element={<TicTacToe />} /> 
+            <Route path="/simon" element={<Simon />} /> 
 
           </Routes>
         </div>

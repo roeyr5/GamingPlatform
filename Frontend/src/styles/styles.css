@@ -1,6 +1,4 @@
-/* styles/styles.css */
 
-/* ---- Sidebar ---- */
 .sidebar {
     position: fixed;
     left: 0;
@@ -17,7 +15,7 @@
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 20px;
-    color: #FFD700; /* Yellow */
+    color: #FFD700; 
   }
   
   .sidebar-menu {
@@ -37,10 +35,9 @@
   }
   
   .sidebar-menu a:hover {
-    color: #FFD700; /* Yellow on hover */
+    color: #FFD700; 
   }
-  
-  /* ---- Forms ---- */
+
   .form-container {
     width: 350px;
     margin: 100px auto;
@@ -70,7 +67,7 @@
   }
   
   button {
-    background-color: #FFD700; /* Yellow */
+    background-color: #FFD700;
     color: black;
     padding: 10px;
     border: none;
@@ -81,25 +78,23 @@
   }
   
   button:hover {
-    background-color: #FFC107; /* Darker Yellow */
+    background-color: #FFC107; 
   }
   
-  /* ---- Main Layout ---- */
   .app-container {
     display: flex;
+    overflow: hidden;
   }
   
   .content {
-    margin-left: 200px; /* Same width as sidebar */
+    margin-left: 200px; 
     padding: 20px;
-    flex: 1; /* Allows it to grow and take available space */
+    flex: 1; 
   }
   
-  /* styles.css */
-
-/* Main Page Layout */
+ 
 .main-container {
-    margin-left: 200px; /* Sidebar width */
+    margin-left: 200px; 
     padding: 20px;
     text-align: center;
   }
@@ -111,8 +106,8 @@
   
   .game-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 Columns */
-    grid-template-rows: repeat(2, 1fr); /* 2 Rows */
+    grid-template-columns: repeat(2, 1fr); 
+    grid-template-rows: repeat(2, 1fr); 
     gap: 20px;
     justify-content: center;
     align-items: center;
@@ -126,15 +121,15 @@
   }
   
   .skill-game {
-    background-color: #FFD700; /* Yellow */
+    background-color: #FFD700; 
   }
   
   .skill-luck-game {
-    background-color: #FFA500; /* Orange */
+    background-color: #FFA500; 
   }
   
   .luck-game {
-    background-color: #FF6347; /* Red */
+    background-color: #FF6347;
   }
   
   .game-card {
@@ -191,6 +186,7 @@
     font-size: 1.2rem;
   }
   .game-container {
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -225,3 +221,12 @@
     background-color: #ddd;
   }
   
+  .test{
+    overflow: hidden;
+  }
+body, html {
+  overflow: hidden;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
