@@ -3,6 +3,8 @@ import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import '../../styles/games.css';
+import Leaderboard from '../sides/Leaderboard';
+
 
 const TicTacToe = () => {
   const { user } = useAuth(); 
@@ -141,24 +143,27 @@ const TicTacToe = () => {
 
   return (
     <div className="game-container">
-      {!game ? (
-        <button onClick={startGame}>Start Game</button>
-      ) : (
-        <div>
-          <div className="game-info">
-            <h2>Tic Tac Toe</h2>
-            <p>Current Turn: {turnPlayer}</p>
-            <p>Opponent: {game.opponent}</p>
-            {winner && <p>{winner} wins!</p>}
+      <div className="game-board">
+        {!game ? (
+          <button onClick={startGame}>Start Game</button>
+        ) : (
+          <div>
+            <div className="game-info">
+              <h2>Tic Tac Toe</h2>
+              <p>Current Turn: {turnPlayer}</p>
+              <p>Opponent: {game.opponent}</p>
+              {winner && <p>{winner} wins!</p>}
+            </div>
+            {renderBoard()}
+            {isGameOver && <button onClick={resetGame}>Start new game</button>}
           </div>
-          {renderBoard()}
-          {isGameOver && (
-            <button onClick={resetGame}>Start new game</button>
-          )}
-        </div>
-      )}
+        )}
+      </div>
+      
+      <div className="leaderboard-container">
+        <Leaderboard />
+      </div>
     </div>
   );
 };
-
 export default TicTacToe;

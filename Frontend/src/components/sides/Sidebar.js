@@ -10,7 +10,6 @@ const Sidebar = () => {
     <div className="sidebar">
       <h2 className="sidebar-title">Game Platform</h2>
       <ul className="sidebar-menu">
-        <li><Link to="/">Home</Link></li>
 
         {!user ? (
           <>

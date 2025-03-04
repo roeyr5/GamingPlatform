@@ -144,11 +144,16 @@ const SnakeGame = () => {
         {gameStarted && countdown > 0 && <div className="countdown">{countdown}</div>}
         <canvas ref={canvasRef} width={400} height={400} />
         <div className="score">Score: {score}</div>
-        {gameOver && <div className="game-over">Game Over! Final Score: {score}</div>}
+        {gameOver && (
+          <div className="game-over-screen">
+            <div className="game-over">Game Over! Final Score: {score}</div>
+            <button onClick={() => window.location.reload()}>Play Again</button>
+          </div>
+        )}
       </div>
 
       <div className="leaderboard-container">
-        <Leaderboard /> 
+        <Leaderboard />
       </div>
     </div>
   );

@@ -1,133 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext'; 
-import axios from 'axios';
-import '../../styles/games.css';
+const User = require('../models/userModel');
 
-const TicTacToe = () => {
-  const { user } = useAuth(); 
-  const [game, setGame] = useState(null); 
-  const [player, setPlayer] = useState(''); 
-  const [winner, setWinner] = useState(null); 
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [turnPlayer, setTurnPlayer] = useState('');
+exports.startGame = async (req, res) => {
+  try {
+    const { player1 } = req.body;
 
-  const startGame = async () => {
-    try {
-      const response = await axios.post('http://localhost:4000/api/tic-tac-toe/start', {
-        player1: user.username,
-      });
-
-      setGame({ board: Array(9).fill(null), currentTurn: 'X', opponent: response.data.opponent });
-      setPlayer('X'); 
-      setTurnPlayer(user.username);
-    } catch (error) {
-      console.error('Error starting the game', error);
-    }
-  };
-
-  const makeMove = async (index) => {
-    if (game.board[index] !== null || isGameOver) {
-      alert('This spot is already taken or the game is over!');
-      return;
+    if (!player1) {
+      return res.status(400).json({ msg: 'Player1 is required' });
     }
 
-    const newBoard = [...game.board];
-    newBoard[index] = player;
+    const users = await User.find();
 
-    const nextPlayer = player === 'X' ? 'O' : 'X';
-
-    const gameWon = checkWinner(newBoard);
-    if (gameWon) {
-      setWinner(player);
-      setIsGameOver(true);
-      alert(`${player === 'X' ? 'You' : game.opponent} win!`);
-      await updatePoints(player); 
+    if (users.length < 2) {
+      return res.status(400).json({ msg: 'Not enough players to start a game' });
     }
 
-    setGame((prevState) => ({ ...prevState, board: newBoard, currentTurn: nextPlayer }));
-    setPlayer(nextPlayer);
-    setTurnPlayer(nextPlayer === 'X' ? game.opponent : user.username); 
-  };
+    let randomOpponent;
+    do {
+      randomOpponent = users[Math.floor(Math.random() * users.length)];
+    } while (randomOpponent.username === player1);
 
-  const checkWinner = (board) => {
-    const winPatterns = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-
-    for (let pattern of winPatterns) {
-      const [a, b, c] = pattern;
-      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  const updatePoints = async (winner) => {
-    try {
-      await axios.post('http://localhost:4000/api/tic-tac-toe/end', { 
-        winner: winner === 'X' ? { player1: user.username, player2: game.opponent, player: 'player1' } : { player1: game.opponent, player2: user.username, player: 'player2' },
-        gameType: 'tictactoe', 
-      });
-    } catch (error) {
-      console.error('Error updating player points', error);
-    }
-  };
-
-  const renderBoard = () => (
-    <div className="board">
-      {game.board.map((cell, index) => (
-        <div
-          key={index}
-          className="cell"
-          onClick={() => makeMove(index)}
-          style={{ cursor: isGameOver ? 'not-allowed' : 'pointer' }}
-        >
-          {cell}
-        </div>
-      ))}
-    </div>
-  );
-
-  const resetGame = () => {
-    setGame(null);
-    setWinner(null);
-    setIsGameOver(false);
-    setTurnPlayer('');
-  };
-
-  useEffect(() => {
-    if (game) {
-      setWinner(null);
-      setIsGameOver(false);
-    }
-  }, [game]);
-
-  return (
-    <div className="game-container">
-      {!game ? (
-        <button onClick={startGame}>Start Game</button> 
-      ) : (
-        <div>
-          <div className="game-info">
-            <h2>Tic Tac Toe</h2>
-            <p>Current Turn: {turnPlayer}</p> 
-            <p>Opponent: {game.opponent}</p>
-            {winner && <p>{winner} wins!</p>}
-          </div>
-          {renderBoard()}
-          {isGameOver && <button onClick={resetGame}>Start new game</button>}
-        </div>
-      )}
-    </div>
-  );
+    res.status(201).json({ opponent: randomOpponent.username });
+  } catch (error) {
+    console.error('Error starting the game:', error);
+    res.status(500).json({ msg: 'Error starting the game', error: error.message });
+  }
 };
 
-export default TicTacToe;
+exports.endGame = async (req, res) => {
+  try {
+    const { winner, gameType } = req.body;
+
+    if (!gameType || !['tictactoe'].includes(gameType)) {
+      return res.status(400).json({ msg: 'Invalid game type' });
+    }
+
+    const player1 = await User.findOne({ username: winner.player1 });
+    const player2 = await User.findOne({ username: winner.player2 });
+
+    if (winner.player === 'player1') {
+      player1.games[gameType].wins += 1;
+      player2.games[gameType].losses += 1;
+    } else if (winner.player === 'player2') {
+      player2.games[gameType].wins += 1;
+      player1.games[gameType].losses += 1;
+    }
+
+    await player1.save();
+    await player2.save();
+
+    res.json({ msg: 'Game finished', player1, player2 });
+  } catch (error) {
+    console.error('Error ending the game:', error);
+    res.status(500).json({ msg: 'Error ending the game', error: error.message });
+  }
+};
+
