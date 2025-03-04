@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/styles.css';
+import '../styles/games.css';
 
 const Main = () => {
   return (
@@ -16,7 +16,7 @@ const Main = () => {
 
         <div className="game-section skill-luck-game">
           <h3>Skill & Luck</h3>
-          <Link to="/boats" className="game-card">Battleship</Link>
+          <Link to="/number-guess" className="game-card">Guess Numbers</Link>
         </div>
 
         <div className="game-section luck-game">

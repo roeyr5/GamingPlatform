@@ -5,7 +5,6 @@ import Swal from 'sweetalert2';
 import '../../styles/games.css';
 import Leaderboard from '../sides/Leaderboard';
 
-
 const TicTacToe = () => {
   const { user } = useAuth(); 
   const [game, setGame] = useState(null); 
@@ -22,8 +21,8 @@ const TicTacToe = () => {
 
       setGame({ board: Array(9).fill(null), currentTurn: 'X', opponent: response.data.opponent });
       setPlayer('X'); 
-      setTurnPlayer(user.username);  // Set the current player's name
-      setIsGameOver(false);  // Reset game over state
+      setTurnPlayer(user.username);
+      setIsGameOver(false);
     } catch (error) {
       console.error('Error starting the game', error);
     }
@@ -43,32 +42,28 @@ const TicTacToe = () => {
     if (gameWon) {
       setWinner(player);
       setIsGameOver(true);
+      await updatePoints(player);
       Swal.fire({
         title: `${player === 'X' ? 'You' : game.opponent} win!`,
-        text: 'Would you like to start a new game?',
+        text: 'The game will reset now.',
         icon: 'success',
-        confirmButtonText: 'Start New Game',
-        allowOutsideClick: true, // Allow clicking outside to close
-        allowEscapeKey: true, // Allow pressing Escape to close
-      }).then((result) => {
-        if (result.isConfirmed) {
-          resetGame();
-        }
+        confirmButtonText: 'OK',
+        allowOutsideClick: true,
+        allowEscapeKey: true,
+      }).then(() => {
+        resetGame();
       });
-      await updatePoints(player);
     } else if (newBoard.every(cell => cell !== null)) {
       setIsGameOver(true);
       Swal.fire({
         title: "It's a tie!",
-        text: 'Would you like to start a new game?',
+        text: 'The game will reset now.',
         icon: 'info',
-        confirmButtonText: 'Start New Game',
-        allowOutsideClick: true, // Allow clicking outside to close
-        allowEscapeKey: true, // Allow pressing Escape to close
-      }).then((result) => {
-        if (result.isConfirmed) {
-          resetGame();
-        }
+        confirmButtonText: 'OK',
+        allowOutsideClick: true,
+        allowEscapeKey: true,
+      }).then(() => {
+        resetGame();
       });
     }
 
@@ -101,7 +96,11 @@ const TicTacToe = () => {
   const updatePoints = async (winner) => {
     try {
       await axios.post('http://localhost:4000/api/tic-tac-toe/end', { 
-        winner: winner === 'X' ? { player1: user.username, player2: game.opponent, player: 'player1' } : { player1: game.opponent, player2: user.username, player: 'player2' },
+        winner: {
+          player1: user.username,
+          player2: game.opponent,
+          player: winner === 'X' ? 'player1' : 'player2'
+        },
         gameType: 'tictactoe', 
       });
     } catch (error) {
@@ -132,6 +131,7 @@ const TicTacToe = () => {
     setWinner(null);
     setIsGameOver(false);
     setTurnPlayer('');
+
   };
 
   useEffect(() => {
@@ -155,15 +155,15 @@ const TicTacToe = () => {
               {winner && <p>{winner} wins!</p>}
             </div>
             {renderBoard()}
-            {isGameOver && <button onClick={resetGame}>Start new game</button>}
           </div>
         )}
       </div>
-      
+
       <div className="leaderboard-container">
-        <Leaderboard />
+        <Leaderboard gameType="tictactoe" /> 
       </div>
     </div>
   );
 };
+
 export default TicTacToe;

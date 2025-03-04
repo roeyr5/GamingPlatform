@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
@@ -11,14 +12,10 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     const token = localStorage.getItem('token');
     if (token) {
       try {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
-
-        console.log(decodedToken);
-
         const userId = decodedToken.userId;
 
         if (userId) {
@@ -35,11 +32,10 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserById = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:4000/api/auth/${userId}`);
-      const data = await response.json();
-      console.log('1')
+      const response = await axios.get(`http://localhost:4000/api/auth/${userId}`);
+      const data = response.data;
+      
       if (data.username) {
-        
         setUser({ username: data.username, userId });
       } else {
         console.error('Username not found for this userId');
@@ -51,19 +47,13 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (userData) => {
     try {
-      const response = await fetch('http://localhost:4000/api/auth/signup', {
-        method: 'POST',
+      const response = await axios.post('http://localhost:4000/api/auth/signup', userData, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to sign up');
-      }
-
-      const data = await response.json();
+      const data = response.data;
       localStorage.setItem('token', data.token);
       const decodedToken = JSON.parse(atob(data.token.split('.')[1]));
       setUser({ userId: decodedToken.userId, token: data.token });
@@ -74,19 +64,13 @@ export const AuthProvider = ({ children }) => {
 
   const signin = async (userData) => {
     try {
-      const response = await fetch('http://localhost:4000/api/auth/signin', {
-        method: 'POST',
+      const response = await axios.post('http://localhost:4000/api/auth/signin', userData, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to sign in');
-      }
-
-      const data = await response.json();
+      const data = response.data;
       localStorage.setItem('token', data.token);
       const decodedToken = JSON.parse(atob(data.token.split('.')[1]));
       setUser({ userId: decodedToken.userId, token: data.token });

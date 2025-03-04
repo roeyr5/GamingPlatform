@@ -1,4 +1,6 @@
 const User = require('../models/userModel');
+const Leaderboard = require('../models/leaderboardModel');
+
 
 exports.startGame = async (req, res) => {
   try {
@@ -37,21 +39,49 @@ exports.endGame = async (req, res) => {
     const player1 = await User.findOne({ username: winner.player1 });
     const player2 = await User.findOne({ username: winner.player2 });
 
-    if (winner.player === 'player1') {
-      player1.games[gameType].wins += 1;
-      player2.games[gameType].losses += 1;
-    } else if (winner.player === 'player2') {
-      player2.games[gameType].wins += 1;
-      player1.games[gameType].losses += 1;
+    if (!player1 || !player2) {
+      return res.status(404).json({ msg: 'Player not found' });
     }
 
-    await player1.save();
-    await player2.save();
+    let player1Leaderboard = await Leaderboard.findOne({ userId: player1._id, gameType });
+    let player2Leaderboard = await Leaderboard.findOne({ userId: player2._id, gameType });
 
-    res.json({ msg: 'Game finished', player1, player2 });
+    if (!player1Leaderboard) {
+      player1Leaderboard = new Leaderboard({
+        userId: player1._id,
+        gameType,
+        wins: 0,
+        losses: 0
+      });
+    }
+    if (!player2Leaderboard) {
+      player2Leaderboard = new Leaderboard({
+        userId: player2._id,
+        gameType,
+        wins: 0,
+        losses: 0
+      });
+    }
+
+    if (winner.player === 'player1') {
+      player1Leaderboard.wins += 1;
+      player2Leaderboard.losses += 1;
+    } else if (winner.player === 'player2') {
+      player2Leaderboard.wins += 1;
+      player1Leaderboard.losses += 1;
+    }
+
+    await player1Leaderboard.save();
+    await player2Leaderboard.save();
+
+    res.json({ msg: 'Game finished', player1Leaderboard, player2Leaderboard });
   } catch (error) {
     console.error('Error ending the game:', error);
     res.status(500).json({ msg: 'Error ending the game', error: error.message });
   }
 };
+
+
+
+
 

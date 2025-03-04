@@ -9,6 +9,8 @@ import SnakeGame from './components/games/SnakeGame';
 import Leaderboard from './components/sides/Leaderboard';  
 import TicTacToe from './components/games/TicTacToe';
 import Simon from './components/games/SimonGame';
+import NumberGuessingGame from './components/games/NumberGuessingGame';
+
 
 function App() {
   return (
@@ -23,6 +25,7 @@ function App() {
             <Route path="/snake" element={<SnakeGame />} /> 
             <Route path="/tic-tac-toe" element={<TicTacToe />} /> 
             <Route path="/simon" element={<Simon />} /> 
+            <Route path="/number-guess" element={<NumberGuessingGame />} /> 
 
           </Routes>
         </div>

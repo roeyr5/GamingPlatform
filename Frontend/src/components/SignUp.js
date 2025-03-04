@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/styles.css'
+import '../styles/games.css'
 import { useAuth } from '../context/AuthContext';
 
 const SignUp = () => {
